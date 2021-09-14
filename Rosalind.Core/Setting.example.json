@@ -1,0 +1,85 @@
+﻿{
+  "config": {
+    "token": "TOKEN_HERE",
+    "trn_token": "TRN_TOKEN_HERE",
+    "koreanbots_token": "KOREANBOTS_TOKEN_HERE",
+    "connection_string": "DATABASE_CONNECTION_STRING_HERE",
+    "developer_id": "DEVELOPER_ID_HERE",
+    "koreanbots_id": "KOREANBOTS_ID_HERE",
+    "error_log_channel_id": "ERROR_LOG_CHANNEL_ID_HERE",
+    "prefix": "PREFIX_HERE"
+  },
+  "commandGroup": [
+    {
+      "title": "🎮 놀이 명령어",
+      "description": "각종 재밌는 기능이 담겨있는 그룹입니다.",
+      "color": "#ff0000",
+      "commands": [
+        {
+          "name": "용돈",
+          "description": "용돈을 지급합니다. 이 명령어는 1분에 한 번만 사용할 수 있습니다.",
+          "args": []
+        },
+        {
+          "name": "은행",
+          "description": "자신의 코인을 확인합니다. 그 코인 아닙니다.",
+          "args": []
+        },
+        {
+          "name": "랭킹",
+          "description": "해당 서버에서의 랭킹을 확인합니다.",
+          "args": []
+        },
+        {
+          "name": "슬롯머신",
+          "description": "슬롯머신 게임을 시작합니다.",
+          "args": [
+            {
+              "name": "코인의 수",
+              "description": "슬롯머신 게임에 베팅할 코인의 수를 나타냅니다."
+            }
+          ]
+        },
+        {
+          "name": "고양이",
+          "description": "귀여운 고양이 사진을 랜덤하게 볼 수 있습니다.",
+          "args": []
+        }
+      ]
+    },
+    {
+      "title": "📄 기본 명령어",
+      "description": "봇의 기본 명령어들이 들어있는 그룹입니다.",
+      "color": "#FF7F00",
+      "commands": [
+        {
+          "name": "핑",
+          "description": "봇과 서버와의 연결 지연시간을 확인합니다.",
+          "args": []
+        },
+        {
+          "name": "도움말",
+          "description": "도움말을 표시합니다.",
+          "args": []
+        }
+      ]
+    },
+    {
+      "title": "🔞 NSFW 명령어",
+      "description": "딥다크한 명령어들이 들어있는 그룹입니다.",
+      "color": "#FFFF00",
+      "commands": [
+        {
+          "name": "겔부루",
+          "description": "겔부루에서 랜덤한 이미지를 가져옵니다.",
+          "args": [
+            {
+              "name": "태그",
+              "description": "검색에 이용할 태그를 의미합니다. 태그는 공백으로 구분합니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+} 

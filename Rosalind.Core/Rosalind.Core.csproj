@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BooruSharp" Version="3.0.3" />
+    <PackageReference Include="Discord.KillersLibrary.Labs" Version="1.0.8" />
+    <PackageReference Include="Discord.Net.Labs" Version="3.0.3" />
+    <PackageReference Include="Discord.Net.Labs.Commands" Version="3.0.0" />
+    <PackageReference Include="Discord.Net.Labs.Core" Version="3.0.2" />
+    <PackageReference Include="Discord.Net.Labs.Rest" Version="3.0.2" />
+    <PackageReference Include="Discord.Net.Labs.Webhook" Version="3.0.0" />
+    <PackageReference Include="Discord.Net.Labs.WebSocket" Version="3.0.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
+    <PackageReference Include="MySql.Data" Version="8.0.26" />
+    <PackageReference Include="System.Runtime.Caching" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\Vote\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Setting.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
