@@ -42,7 +42,7 @@ namespace Rosalind.Core.Services
             return new ServiceCollection()
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<MultiButtonsService>()
-                .AddSingleton<DiscordSocketClient>(x => ActivatorUtilities.CreateInstance<DiscordSocketClient>(x, new DiscordSocketConfig { LogLevel = LogSeverity.Debug, AlwaysAcknowledgeInteractions = false }))
+                .AddSingleton<DiscordSocketClient>(x => ActivatorUtilities.CreateInstance<DiscordSocketClient>(x, new DiscordSocketConfig { LogLevel = LogSeverity.Debug, AlwaysAcknowledgeInteractions = true }))
                 .AddSingleton<EmbedPagesService>()
                 .AddSingleton<CommandService>(x => ActivatorUtilities.CreateInstance<CommandService>(x, new CommandServiceConfig { DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Debug }))
                 .AddSingleton<ReactService>()
