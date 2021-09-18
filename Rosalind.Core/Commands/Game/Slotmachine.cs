@@ -1,11 +1,11 @@
 ﻿using Discord;
 using Discord.Commands;
+using Rosalind.Core.Preconditions;
+using Rosalind.Core.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Rosalind.Core.Services;
-using Rosalind.Core.Preconditions;
 
 namespace Rosalind.Core.Commands.Game
 {

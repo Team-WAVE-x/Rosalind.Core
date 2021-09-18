@@ -47,7 +47,8 @@ namespace Rosalind.Core.Commands.General
             });
             embed.WithTimestamp(DateTimeOffset.Now);
 
-            await message.ModifyAsync(msg => {
+            await message.ModifyAsync(msg =>
+            {
                 msg.Content = null;
                 msg.Embed = embed.Build();
             });

@@ -78,7 +78,7 @@ namespace Rosalind.Core.Services
             {
                 try
                 {
-                    var message = await(_client.GetGuild(componentMessage.MessageGuildId).GetChannel(componentMessage.MessageChannelId) as ISocketMessageChannel).GetMessageAsync(componentMessage.MessageId) as RestUserMessage;
+                    var message = await (_client.GetGuild(componentMessage.MessageGuildId).GetChannel(componentMessage.MessageChannelId) as ISocketMessageChannel).GetMessageAsync(componentMessage.MessageId) as RestUserMessage;
                     await message.DeleteAsync();
                 }
                 catch (Exception)
