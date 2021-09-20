@@ -61,7 +61,7 @@ namespace Rosalind.Core.Services
             //가져온 객체 내에 있는 딕셔너리의 대리자를 실행
             foreach (var item in componentMessage.Dictionary)
             {
-                if (socketMessageComponent != null && componentMessage != null && socketMessageComponent.Data.CustomId == item.Key.CustomId && socketMessageComponent.User.Id == componentMessage.MessageUserId) //socketMessageComponent과 componentMessage이 null이 아니고 이벤트를 받은 컴포넌트의 아이디와 캐시에서 가져온 컴포넌트의 아이디와 같고 인터랙션을 보낸 사람의 아이디와 캐시에서 가져온 유저의 아이디와 같다면
+                if (socketMessageComponent != null && componentMessage != null && socketMessageComponent.Data.CustomId == item.Key.CustomId && socketMessageComponent.User.Id == componentMessage.MessageUserId && socketMessageComponent.Message.Id == componentMessage.MessageId) //눈물의 If
                 {
                     item.Value(); //대리자 실행
                 }

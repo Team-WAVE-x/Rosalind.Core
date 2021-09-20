@@ -19,7 +19,7 @@ namespace Rosalind.Core.Commands.General
         public async Task ButtonAsync()
         {
             var dictionary = new Dictionary<Models.Button, Action>();
-            dictionary.Add(new Models.Button("안녕", "test"), () => ReplyAsync("ㅎㅇ"));
+            dictionary.Add(new Models.Button("안녕", "test"), () => ReplyAsync(Context.Message.Id.ToString()));
 
             await _component.SendComponentMessage("테스트", Context, dictionary, seconds: 10, removeMessageAfterTimeOut: true);
         }
