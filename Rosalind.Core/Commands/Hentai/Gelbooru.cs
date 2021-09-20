@@ -1,5 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.Rest;
+using Rosalind.Core.Models;
 using Rosalind.Core.Preconditions;
 using Rosalind.Core.Services;
 using System;
@@ -11,11 +13,11 @@ namespace Rosalind.Core.Commands.Hentai
 {
     public class Gelbooru : ModuleBase<SocketCommandContext>
     {
-        private readonly ReactService _react;
+        private readonly ComponentService _component;
 
-        public Gelbooru(ReactService react)
+        public Gelbooru(ComponentService component)
         {
-            _react = react;
+            _component = component;
         }
 
         [Nsfw]
@@ -55,10 +57,10 @@ namespace Rosalind.Core.Commands.Hentai
             });
             embed.WithTimestamp(DateTimeOffset.Now);
 
-            var message = await Context.Channel.SendMessageAsync(embed: embed.Build()); //메시지 전송하고 객체 캡처
-            var tagMessage = await Context.Channel.SendMessageAsync($"태그: `{string.Join(", ", result.Tags)}`"); //태그 메시지도 전송하고 캡처
-
             #region ReactMessage Delegate
+            RestUserMessage message = null;
+            RestUserMessage tagMessage = null;
+
             Action nextAction = async delegate
             {
                 var booru = new BooruSharp.Booru.Gelbooru();
@@ -84,17 +86,19 @@ namespace Rosalind.Core.Commands.Hentai
 
             Action closeAction = delegate
             {
-                _react.RemoveReactionMessage(message.Id);
+                _component.RemoveComponentMessage(message.Id);
+                tagMessage.DeleteAsync();
             };
             #endregion
 
-            var dictionary = new Dictionary<IEmote, Action>
+            var dictionary = new Dictionary<Button, Action>
             {
-                { new Emoji("▶️"), nextAction },
-                { new Emoji("🛑"), closeAction }
+                { new Button("다음 이미지", "next", new Emoji("▶️"), style: ButtonStyle.Primary), nextAction },
+                { new Button("제거", "delete", new Emoji("🛑"), style: ButtonStyle.Danger), closeAction }
             };
 
-            _react.AddReactionMessage(message, Context.User.Id, Context.Guild.Id, dictionary, TimeSpan.FromMinutes(5));
+            message = await _component.SendComponentMessage(Context, dictionary, embed: embed.Build(), removeMessageAfterTimeOut: true);
+            tagMessage = await Context.Channel.SendMessageAsync($"태그: `{string.Join(", ", result.Tags)}`");
         }
     }
 }

@@ -23,16 +23,7 @@ namespace Rosalind.Core.Services
             _client.InteractionCreated += OnInteractionCreated;
         }
 
-        /// <summary>
-        /// 컴포넌트 메시지를 전송하고 캐싱합니다.
-        /// </summary>
-        /// <param name="content">메시지의 내용</param>
-        /// <param name="context">커맨드의 컨텍스트</param>
-        /// <param name="dictionary">버튼 객체가 키고 대리자가 값인 딕셔너리</param>
-        /// <param name="embed">메시지에 부착할 임베드</param>
-        /// <param name="seconds">캐시 시간</param>
-        /// <param name="removeMessageAfterTimeOut">캐시 시간 초과시 메시지 삭제 여부</param>
-        public async Task SendComponentMessage(string content, SocketCommandContext context, Dictionary<Button, Action> dictionary, Embed embed = null, ulong seconds = 500, bool removeMessageAfterTimeOut = false)
+        public async Task<RestUserMessage> SendComponentMessage(SocketCommandContext context, Dictionary<Button, Action> dictionary, string content = null, Embed embed = null, ulong seconds = 500, bool removeMessageAfterTimeOut = false)
         {
             var cache = MemoryCache.Default;
             var policy = new CacheItemPolicy { SlidingExpiration = TimeSpan.FromSeconds(seconds), RemovedCallback = CacheRemovedCallback };
@@ -50,6 +41,14 @@ namespace Rosalind.Core.Services
             cache.Add(message.Id.ToString(), componentMessage, policy); //캐시에 등록
 
             Console.WriteLine("{0} {1,-11} {2}", DateTime.Now.ToString("HH:mm:ss"), "Component", $"Cached {message.Id}"); //로그 메시지 전송
+
+            return message; //메시지 아이디 반환
+        }
+
+        public void RemoveComponentMessage(ulong messageId)
+        {
+            var cache = MemoryCache.Default;
+            cache.Remove(messageId.ToString());
         }
 
         private Task OnInteractionCreated(SocketInteraction arg)
@@ -58,12 +57,15 @@ namespace Rosalind.Core.Services
             var socketMessageComponent = arg as SocketMessageComponent;
             var componentMessage = cache.Get(socketMessageComponent.Message.Id.ToString()) as ComponentMessage;
 
-            //가져온 객체 내에 있는 딕셔너리의 대리자를 실행
-            foreach (var item in componentMessage.Dictionary)
+            if (socketMessageComponent != null && componentMessage != null && socketMessageComponent.User.Id == componentMessage.MessageUserId && socketMessageComponent.Message.Id == componentMessage.MessageId) //눈물의 If
             {
-                if (socketMessageComponent != null && componentMessage != null && socketMessageComponent.Data.CustomId == item.Key.CustomId && socketMessageComponent.User.Id == componentMessage.MessageUserId && socketMessageComponent.Message.Id == componentMessage.MessageId) //눈물의 If
+                //가져온 객체 내에 있는 딕셔너리의 대리자를 실행
+                foreach (var item in componentMessage.Dictionary)
                 {
-                    item.Value(); //대리자 실행
+                    if (socketMessageComponent.Data.CustomId == item.Key.CustomId)
+                    {
+                        item.Value(); //대리자 실행
+                    }
                 }
             }
 

@@ -1,5 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.Rest;
+using Rosalind.Core.Models;
 using Rosalind.Core.Preconditions;
 using Rosalind.Core.Services;
 using System;
@@ -10,39 +12,38 @@ namespace Rosalind.Core.Commands.Management
 {
     public class Restart : ModuleBase<SocketCommandContext>
     {
-        private readonly ReactService _react;
+        private readonly ComponentService _component;
 
-        public Restart(ReactService react)
+        public Restart(ComponentService component)
         {
-            _react = react;
+            _component = component;
         }
 
         [Developer]
         [Command("재시작")]
         public async Task GelbooruAsync()
         {
-            var message = await Context.Channel.SendMessageAsync("❓ 봇을 재시작할까요?");
-
             #region ReactMessage Delegate
+            RestUserMessage message = null;
+
             Action okAction = delegate
             {
-                var info = new System.Diagnostics.ProcessStartInfo(Environment.GetCommandLineArgs()[0]);
-                System.Diagnostics.Process.Start(info);
+                System.Diagnostics.Process.Start(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             };
 
             Action cancelAction = delegate
             {
-                _react.RemoveReactionMessage(message.Id);
+                _component.RemoveComponentMessage(message.Id);
             };
             #endregion
 
-            var dictionary = new Dictionary<IEmote, Action>
+            var dictionary = new Dictionary<Button, Action>
             {
-                { new Emoji("✅"), okAction },
-                { new Emoji("❌"), cancelAction }
+                { new Button("확인", "confirm", new Emoji("✅"), style: ButtonStyle.Primary), okAction },
+                { new Button("취소", "cancel", new Emoji("❌"), style: ButtonStyle.Danger), cancelAction }
             };
 
-            _react.AddReactionMessage(message, Context.User.Id, Context.Guild.Id, dictionary, TimeSpan.FromSeconds(10));
+            message = await _component.SendComponentMessage(Context, dictionary, "❓ 봇을 재시작할까요?", removeMessageAfterTimeOut: true);
         }
     }
 }

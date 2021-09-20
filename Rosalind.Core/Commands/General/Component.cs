@@ -21,7 +21,7 @@ namespace Rosalind.Core.Commands.General
             var dictionary = new Dictionary<Models.Button, Action>();
             dictionary.Add(new Models.Button("안녕", "test"), () => ReplyAsync(Context.Message.Id.ToString()));
 
-            await _component.SendComponentMessage("테스트", Context, dictionary, seconds: 10, removeMessageAfterTimeOut: true);
+            await _component.SendComponentMessage(Context, dictionary, "테스트");
         }
     }
 }

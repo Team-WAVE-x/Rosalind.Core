@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.Rest;
 using Newtonsoft.Json.Linq;
+using Rosalind.Core.Models;
 using Rosalind.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -11,11 +13,11 @@ namespace Rosalind.Core.Commands.Game
 {
     public class Kitty : ModuleBase<SocketCommandContext>
     {
-        private readonly ReactService _react;
+        private readonly ComponentService _component;
 
-        public Kitty(ReactService react)
+        public Kitty(ComponentService component)
         {
-            _react = react;
+            _component = component;
         }
 
         [Command("야옹이")]
@@ -35,9 +37,9 @@ namespace Rosalind.Core.Commands.Game
             });
             embed.WithTimestamp(DateTimeOffset.Now);
 
-            var message = await Context.Channel.SendMessageAsync(embed: embed.Build());
+            #region Component Message Delegate
+            RestUserMessage message = null; //매우 안좋은 생각임 (하지만 현재로써는 작동함)
 
-            #region ReactMessage Delegate
             Action nextAction = async delegate
             {
                 var client = new WebClient();
@@ -59,17 +61,17 @@ namespace Rosalind.Core.Commands.Game
 
             Action closeAction = delegate
             {
-                _react.RemoveReactionMessage(message.Id);
+                _component.RemoveComponentMessage(message.Id);
             };
             #endregion
 
-            var dictionary = new Dictionary<IEmote, Action>
+            var dictionary = new Dictionary<Button, Action>()
             {
-                { new Emoji("▶️"), nextAction },
-                { new Emoji("🛑"), closeAction }
+                { new Button("다음 이미지", "next", new Emoji("▶️"), style: ButtonStyle.Primary), nextAction },
+                { new Button("제거", "delete", new Emoji("🛑"), style: ButtonStyle.Danger), closeAction }
             };
 
-            _react.AddReactionMessage(message, Context.User.Id, Context.Guild.Id, dictionary, TimeSpan.FromSeconds(10));
+            message = await _component.SendComponentMessage(Context, dictionary, embed: embed.Build(), removeMessageAfterTimeOut: true);
         }
     }
 }
