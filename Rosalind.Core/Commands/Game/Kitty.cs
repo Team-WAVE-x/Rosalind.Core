@@ -38,7 +38,7 @@ namespace Rosalind.Core.Commands.Game
             embed.WithTimestamp(DateTimeOffset.Now);
 
             #region Component Message Delegate
-            RestUserMessage message = null; //매우 안좋은 생각임 (하지만 현재로써는 작동함)
+            RestUserMessage message = null;
 
             Action nextAction = async delegate
             {

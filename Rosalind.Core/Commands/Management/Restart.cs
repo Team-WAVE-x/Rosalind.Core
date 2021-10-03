@@ -21,7 +21,7 @@ namespace Rosalind.Core.Commands.Management
 
         [Developer]
         [Command("재시작")]
-        public async Task GelbooruAsync()
+        public async Task RestartAsync()
         {
             #region ReactMessage Delegate
             RestUserMessage message = null;
