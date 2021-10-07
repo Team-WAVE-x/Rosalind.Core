@@ -1,14 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
 using Rosalind.Core.Models;
+using SqlKata.Compilers;
+using SqlKata.Execution;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using SqlKata;
-using SqlKata.Execution;
-using System.Data.SqlClient;
-using SqlKata.Compilers;
-using System.Threading.Tasks;
 
 namespace Rosalind.Core.Services
 {

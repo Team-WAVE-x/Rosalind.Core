@@ -5,7 +5,7 @@ using KillersLibrary;
 using KillersLibrary.EmbedPages;
 using Microsoft.Extensions.DependencyInjection;
 using Rosalind.Core.Models;
-using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,8 +17,12 @@ namespace Rosalind.Core.Services
         private ServiceProvider _service;
         private DiscordSocketClient _client;
 
-        public DiscordService()
+        private readonly string configFilePath;
+
+        public DiscordService(string configFilePath)
         {
+            this.configFilePath = configFilePath;
+
             _service = ConfigureServices();
             _setting = _service.GetRequiredService<Setting>();
             _client = _service.GetRequiredService<DiscordSocketClient>();
@@ -26,7 +30,7 @@ namespace Rosalind.Core.Services
 
         public async Task MainAsync()
         {
-            _setting.GetConfig($"{AppDomain.CurrentDomain.BaseDirectory}\\Setting.json");
+            _setting.GetConfig(Path.GetFullPath(configFilePath));
             _client.Log += new LoggingService().OnLogReceived;
             _service.GetRequiredService<CommandService>().Log += new LoggingService().OnLogReceived;
 

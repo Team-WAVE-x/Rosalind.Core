@@ -1,6 +1,4 @@
-﻿using SqlKata;
-
-namespace Rosalind.Core.Models
+﻿namespace Rosalind.Core.Models
 {
     public class User
     {
