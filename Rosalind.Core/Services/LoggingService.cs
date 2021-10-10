@@ -1,5 +1,6 @@
 ﻿using Discord;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Rosalind.Core.Services
@@ -22,6 +23,7 @@ namespace Rosalind.Core.Services
                 Console.ForegroundColor = ConsoleColor.DarkGray;
 
             Console.WriteLine("{0} {1,-11} {2}", DateTime.Now.ToString("HH:mm:ss"), log.Source, log.Message ?? "Null");
+
             return Task.CompletedTask;
         }
     }

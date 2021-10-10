@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using log4net;
 using Microsoft.Extensions.DependencyInjection;
 using Rosalind.Core.Models;
 using System;
@@ -11,8 +12,9 @@ namespace Rosalind.Core.Services
 {
     public class CommandHandlingService
     {
-        private readonly Setting _setting;
-        private readonly CommandService _command;
+        private ILog _log;
+        private Setting _setting;
+        private CommandService _command;
         private IServiceProvider _service;
         private DiscordSocketClient _client;
 
@@ -23,9 +25,28 @@ namespace Rosalind.Core.Services
             _command = service.GetRequiredService<CommandService>();
             _client = service.GetRequiredService<DiscordSocketClient>();
 
+            _log = LogManager.GetLogger("RollingActivityLog");
             _client.MessageReceived += OnClientMessage;
-            _command.Log += new LoggingService().OnLogReceived;
+            _command.Log += OnLogReceived;
             _command.CommandExecuted += OnCommandExecuted;
+        }
+
+        private Task OnLogReceived(LogMessage log)
+        {
+            if (log.Severity == LogSeverity.Critical)
+                _log.Fatal(log.Message ?? "Null");
+            else if (log.Severity == LogSeverity.Error)
+                _log.Error(log.Message ?? "Null");
+            else if (log.Severity == LogSeverity.Warning)
+                _log.Warn(log.Message ?? "Null");
+            else if (log.Severity == LogSeverity.Info)
+                _log.Info(log.Message ?? "Null");
+            else if (log.Severity == LogSeverity.Verbose)
+                _log.Info(log.Message ?? "Null");
+            else if (log.Severity == LogSeverity.Debug)
+                _log.Debug(log.Message ?? "Null");
+
+            return Task.CompletedTask;
         }
 
         public async Task InitializeAsync()
