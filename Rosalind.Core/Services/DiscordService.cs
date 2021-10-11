@@ -6,7 +6,6 @@ using KillersLibrary.EmbedPages;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
 using Rosalind.Core.Models;
-using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;

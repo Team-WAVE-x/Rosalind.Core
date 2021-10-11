@@ -1,6 +1,5 @@
 ﻿using Discord;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Rosalind.Core.Services
