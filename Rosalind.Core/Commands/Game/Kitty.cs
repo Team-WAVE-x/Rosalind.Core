@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.Rest;
+using Discord.WebSocket;
 using Newtonsoft.Json.Linq;
 using Rosalind.Core.Models;
 using Rosalind.Core.Services;
@@ -38,12 +39,10 @@ namespace Rosalind.Core.Commands.Game
             embed.WithTimestamp(DateTimeOffset.Now);
 
             #region Component Message Delegate
-            RestUserMessage message = null;
-
-            Action nextAction = async delegate
+            Action<SocketInteraction, ComponentMessage> nextAction = async delegate (SocketInteraction interaction, ComponentMessage message)
             {
                 var client = new WebClient();
-                var imageUrl = JObject.Parse(client.DownloadString("http://aws.random.cat/meow")).SelectToken("file").ToString();
+                string imageUrl = JObject.Parse(client.DownloadString("http://aws.random.cat/meow")).SelectToken("file").ToString();
 
                 var embed = new EmbedBuilder();
                 embed.WithTitle("🐱 고양이");
@@ -56,22 +55,22 @@ namespace Rosalind.Core.Commands.Game
                 });
                 embed.WithTimestamp(DateTimeOffset.Now);
 
-                await message.ModifyAsync(msg => msg.Embed = embed.Build());
+                await interaction.ModifyOriginalResponseAsync(msg => msg.Embed = embed.Build());
             };
 
-            Action closeAction = delegate
+            Action<SocketInteraction, ComponentMessage> closeAction = delegate (SocketInteraction interaction, ComponentMessage message)
             {
-                _component.RemoveComponentMessage(message.Id);
+                _component.RemoveComponentMessage(message.MessageId);
             };
             #endregion
 
-            var dictionary = new Dictionary<Button, Action>()
+            var dictionary = new Dictionary<Button, Action<SocketInteraction, ComponentMessage>>()
             {
                 { new Button("다음 이미지", "next", new Emoji("▶️"), style: ButtonStyle.Primary), nextAction },
                 { new Button("제거", "delete", new Emoji("🛑"), style: ButtonStyle.Danger), closeAction }
             };
 
-            message = await _component.SendComponentMessage(Context, dictionary, embed: embed.Build(), removeMessageAfterTimeOut: true);
+            await _component.SendComponentMessage(Context, dictionary, embed: embed.Build(), removeMessageAfterTimeOut: true);
         }
     }
 }

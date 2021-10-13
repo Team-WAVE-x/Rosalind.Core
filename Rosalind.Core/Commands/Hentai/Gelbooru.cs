@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.Rest;
+using Discord.WebSocket;
 using Rosalind.Core.Models;
 using Rosalind.Core.Preconditions;
 using Rosalind.Core.Services;
@@ -58,10 +59,7 @@ namespace Rosalind.Core.Commands.Hentai
             embed.WithTimestamp(DateTimeOffset.Now);
 
             #region ReactMessage Delegate
-            RestUserMessage message = null;
-            RestUserMessage tagMessage = null;
-
-            Action nextAction = async delegate
+            Action<SocketInteraction, ComponentMessage> nextAction = async delegate (SocketInteraction interaction, ComponentMessage message)
             {
                 var booru = new BooruSharp.Booru.Gelbooru();
                 result = await booru.GetRandomPostAsync(tags?.Split(null));
@@ -80,25 +78,29 @@ namespace Rosalind.Core.Commands.Hentai
                 });
                 embed.WithTimestamp(DateTimeOffset.Now);
 
-                await message.ModifyAsync(msg => msg.Embed = embed.Build());
-                await tagMessage.ModifyAsync(msg => msg.Content = $"태그: `{string.Join(", ", result.Tags)}`");
+                await interaction.ModifyOriginalResponseAsync(msg => msg.Embed = embed.Build());
             };
 
-            Action closeAction = delegate
+            Action<SocketInteraction, ComponentMessage> tagAction = async delegate
             {
-                _component.RemoveComponentMessage(message.Id);
-                tagMessage.DeleteAsync();
+                string tags = string.Join(", ", result.Tags);
+                await Context.Channel.SendMessageAsync((tags.Length <= 1000 ? tags : tags.Substring(0, 1000) + "\n..."));
+            };
+
+            Action<SocketInteraction, ComponentMessage> closeAction = delegate (SocketInteraction interaction, ComponentMessage message)
+            {
+                _component.RemoveComponentMessage(message.MessageId);
             };
             #endregion
 
-            var dictionary = new Dictionary<Button, Action>
+            var dictionary = new Dictionary<Button, Action<SocketInteraction, ComponentMessage>>
             {
                 { new Button("다음 이미지", "next", new Emoji("▶️"), style: ButtonStyle.Primary), nextAction },
+                { new Button("태그", "tag", new Emoji("🏷"), style: ButtonStyle.Secondary), tagAction },
                 { new Button("제거", "delete", new Emoji("🛑"), style: ButtonStyle.Danger), closeAction }
             };
 
-            message = await _component.SendComponentMessage(Context, dictionary, embed: embed.Build(), removeMessageAfterTimeOut: true);
-            tagMessage = await Context.Channel.SendMessageAsync($"태그: `{string.Join(", ", result.Tags)}`");
+            await _component.SendComponentMessage(Context, dictionary, embed: embed.Build(), removeMessageAfterTimeOut: true);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Rosalind.Core.Services
             _client.InteractionCreated += OnInteractionCreated;
         }
 
-        public async Task<RestUserMessage> SendComponentMessage(SocketCommandContext context, Dictionary<Button, Action> dictionary, string content = null, Embed embed = null, ulong seconds = 500, bool removeMessageAfterTimeOut = false)
+        public async Task<RestUserMessage> SendComponentMessage(SocketCommandContext context, Dictionary<Button, Action<SocketInteraction, ComponentMessage>> dictionary, string content = null, Embed embed = null, ulong seconds = 500, bool removeMessageAfterTimeOut = false)
         {
             var cache = MemoryCache.Default;
             var policy = new CacheItemPolicy { SlidingExpiration = TimeSpan.FromSeconds(seconds), RemovedCallback = CacheRemovedCallback };
@@ -64,12 +64,12 @@ namespace Rosalind.Core.Services
                 {
                     if (socketMessageComponent.Data.CustomId == item.Key.CustomId)
                     {
-                        item.Value(); //대리자 실행
+                        item.Value(arg, componentMessage); //대리자 실행
                     }
                 }
             }
 
-            return Task.CompletedTask; //작업 완료
+            return Task.CompletedTask;
         }
 
         private async void CacheRemovedCallback(CacheEntryRemovedArguments arguments)
