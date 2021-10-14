@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.Rest;
 using Discord.WebSocket;
 using Rosalind.Core.Models;
 using Rosalind.Core.Preconditions;

@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.Rest;
 using Discord.WebSocket;
 using Newtonsoft.Json.Linq;
 using Rosalind.Core.Models;
@@ -55,6 +54,7 @@ namespace Rosalind.Core.Commands.Game
                 });
                 embed.WithTimestamp(DateTimeOffset.Now);
 
+                await interaction.DeferAsync();
                 await interaction.ModifyOriginalResponseAsync(msg => msg.Embed = embed.Build());
             };
 

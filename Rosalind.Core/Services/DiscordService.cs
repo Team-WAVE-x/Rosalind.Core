@@ -1,8 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using KillersLibrary;
-using KillersLibrary.EmbedPages;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
 using Rosalind.Core.Models;
@@ -66,9 +64,7 @@ namespace Rosalind.Core.Services
         {
             return new ServiceCollection()
                 .AddSingleton<CommandHandlingService>()
-                .AddSingleton<MultiButtonsService>()
-                .AddSingleton<DiscordSocketClient>(x => ActivatorUtilities.CreateInstance<DiscordSocketClient>(x, new DiscordSocketConfig { LogLevel = LogSeverity.Debug, AlwaysAcknowledgeInteractions = true }))
-                .AddSingleton<EmbedPagesService>()
+                .AddSingleton<DiscordSocketClient>(x => ActivatorUtilities.CreateInstance<DiscordSocketClient>(x, new DiscordSocketConfig { LogLevel = LogSeverity.Debug }))
                 .AddSingleton<ComponentService>()
                 .AddSingleton<CommandService>(x => ActivatorUtilities.CreateInstance<CommandService>(x, new CommandServiceConfig { DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Debug }))
                 .AddSingleton<ReactService>()

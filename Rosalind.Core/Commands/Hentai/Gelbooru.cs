@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.Rest;
 using Discord.WebSocket;
 using Rosalind.Core.Models;
 using Rosalind.Core.Preconditions;
@@ -78,6 +77,7 @@ namespace Rosalind.Core.Commands.Hentai
                 });
                 embed.WithTimestamp(DateTimeOffset.Now);
 
+                await interaction.DeferAsync();
                 await interaction.ModifyOriginalResponseAsync(msg => msg.Embed = embed.Build());
             };
 
