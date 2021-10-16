@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Rosalind.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,13 +8,6 @@ namespace Rosalind.Core.Commands.General
 {
     public class Ping : ModuleBase<SocketCommandContext>
     {
-        private readonly ReactService _react;
-
-        public Ping(ReactService react)
-        {
-            _react = react;
-        }
-
         [Command("핑")]
         public async Task PingAsync()
         {
@@ -36,10 +28,10 @@ namespace Rosalind.Core.Commands.General
             embed.WithTitle("🏓 Pong!");
             embed.WithColor(pingColor);
             embed.WithFields(new List<EmbedFieldBuilder>
-                {
-                    new EmbedFieldBuilder{ Name = "Gateway Ping", Value = $"`{Context.Client.Latency}ms`" },
-                    new EmbedFieldBuilder{ Name = "Client Ping", Value = $"`{latency.TotalMilliseconds}ms`" }
-                });
+            {
+                new EmbedFieldBuilder{ Name = "Gateway Ping", Value = $"`{Context.Client.Latency}ms`" },
+                new EmbedFieldBuilder{ Name = "Client Ping", Value = $"`{latency.TotalMilliseconds}ms`" }
+            });
             embed.WithFooter(new EmbedFooterBuilder
             {
                 IconUrl = Context.User.GetAvatarUrl(ImageFormat.Png, 128),

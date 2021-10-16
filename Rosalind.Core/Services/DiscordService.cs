@@ -67,7 +67,6 @@ namespace Rosalind.Core.Services
                 .AddSingleton<DiscordSocketClient>(x => ActivatorUtilities.CreateInstance<DiscordSocketClient>(x, new DiscordSocketConfig { LogLevel = LogSeverity.Debug }))
                 .AddSingleton<ComponentService>()
                 .AddSingleton<CommandService>(x => ActivatorUtilities.CreateInstance<CommandService>(x, new CommandServiceConfig { DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Debug }))
-                .AddSingleton<ReactService>()
                 .AddSingleton<SqlService>()
                 .AddSingleton<Setting>()
                 .BuildServiceProvider();
