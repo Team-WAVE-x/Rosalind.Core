@@ -59,18 +59,45 @@ namespace Rosalind.Core.Services
             if (!command.IsSpecified || result.IsSuccess)
                 return;
 
-            var embed = new EmbedBuilder();
-            embed.WithTitle("❌ 오류");
-            embed.WithColor(Color.Red);
-            embed.WithDescription($"`{result}`");
-            embed.WithFooter(new EmbedFooterBuilder
+            switch (result.Error)
             {
-                IconUrl = _client.CurrentUser.GetAvatarUrl(),
-                Text = _client.CurrentUser.Username
-            });
-            embed.WithTimestamp(DateTimeOffset.Now);
+                case CommandError.BadArgCount:
+                    await context.Channel.SendMessageAsync("❌ 인자의 수가 올바르지 않습니다.");
+                    break;
+                case CommandError.Exception:
+                    await context.Channel.SendMessageAsync("❌ 명령어 실행 도중 알 수 없는 오류가 발생했습니다.");
 
-            await (context.Client.GetChannelAsync(_setting.Config.ErrorLogChannelId).Result as ISocketMessageChannel).SendMessageAsync(embed: embed.Build());
+                    var embed = new EmbedBuilder();
+                    embed.WithTitle("❌ 예외 발생");
+                    embed.AddField("날짜", DateTime.Now.ToString("D"));
+                    embed.AddField("내용", result.ErrorReason);
+                    embed.WithColor(Color.Red);
+                    embed.WithFooter(new EmbedFooterBuilder
+                    {
+                        IconUrl = context.User.GetAvatarUrl(ImageFormat.Png, 128),
+                        Text = $"{context.User.Username}"
+                    });
+                    embed.WithTimestamp(DateTimeOffset.Now);
+
+                    await (context.Client.GetChannelAsync(_setting.Config.ErrorLogChannelId).Result as ISocketMessageChannel).SendMessageAsync(embed: embed.Build());
+
+                    break;
+                case CommandError.MultipleMatches:
+                    await context.Channel.SendMessageAsync("❌ 인자 분석중 오류가 발생하였습니다.");
+                    break;
+                case CommandError.ObjectNotFound:
+                    await context.Channel.SendMessageAsync("❌ 인자를 찾을 수 없습니다.");
+                    break;
+                case CommandError.ParseFailed:
+                    await context.Channel.SendMessageAsync("❌ 인자 분석에 실패하였습니다.");
+                    break;
+                case CommandError.UnknownCommand:
+                    await context.Channel.SendMessageAsync("❌ 알 수 없는 명령어입니다.");
+                    break;
+                case CommandError.Unsuccessful:
+                    await context.Channel.SendMessageAsync("❌ 명령어 실행 도중 알 수 없는 오류가 발생했습니다.");
+                    break;
+            }
         }
 
         private async Task OnClientMessage(SocketMessage socketMessage)
