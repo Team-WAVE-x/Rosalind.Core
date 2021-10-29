@@ -7,6 +7,7 @@ using Rosalind.Core.Models;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Victoria;
 
 namespace Rosalind.Core.Services
 {
@@ -68,7 +69,12 @@ namespace Rosalind.Core.Services
                 .AddSingleton<ComponentService>()
                 .AddSingleton<CommandService>(x => ActivatorUtilities.CreateInstance<CommandService>(x, new CommandServiceConfig { DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Debug }))
                 .AddSingleton<SqlService>()
+                .AddSingleton<LavaConfig>()
+                .AddSingleton<LavaNode>()
                 .AddSingleton<Setting>()
+                .AddLavaNode(x => {
+                    x.SelfDeaf = true;
+                })
                 .BuildServiceProvider();
         }
     }
