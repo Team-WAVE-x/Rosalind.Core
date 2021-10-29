@@ -35,8 +35,9 @@ namespace Rosalind.Core.Commands.General
                 embed.WithFooter(new EmbedFooterBuilder
                 {
                     IconUrl = Context.User.GetAvatarUrl(ImageFormat.Png, 128),
-                    Text = Context.User.Username
+                    Text = $"{Context.User.Username} 페이지 {page + 1}/{_setting.CommandGroup.Length}"
                 });
+                embed.WithCurrentTimestamp();
 
                 foreach (var item in _setting.CommandGroup[page].Commands)
                 {
