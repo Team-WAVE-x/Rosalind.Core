@@ -9,6 +9,16 @@
     "error_log_channel_id": "ERROR_LOG_CHANNEL_ID_HERE",
     "prefix": "PREFIX_HERE"
   },
+  "lavalinkConfig": {
+    "selfDeaf": true,
+    "nodes": [
+      {
+        "hostname": "LAVALINK_HOSTNAME_HERE",
+        "port": "LAVALINK_PORT_HERE",
+        "password": "LAVALINK_PASSWORD_HERE"
+      }
+    ]
+  },
   "commandGroup": [
     {
       "title": "🎮 놀이 명령어",

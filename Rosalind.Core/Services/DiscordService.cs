@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
 using Rosalind.Core.Models;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,6 +35,7 @@ namespace Rosalind.Core.Services
         {
             _setting.GetConfig(Path.GetFullPath(configFilePath));
             _client.Log += OnLogReceived;
+            _client.Ready += OnReadyAsync;
             _service.GetRequiredService<CommandService>().Log += OnLogReceived;
 
             await _client.LoginAsync(TokenType.Bot, _setting.Config.Token);
@@ -41,6 +43,19 @@ namespace Rosalind.Core.Services
             await _client.SetGameAsync($"{_setting.Config.Prefix}도움말", type: ActivityType.Listening);
             await _service.GetRequiredService<CommandHandlingService>().InitializeAsync();
             await Task.Delay(Timeout.Infinite).ConfigureAwait(false);
+        }
+
+        private Task OnReadyAsync()
+        {
+            var lavaNode = _service.GetRequiredService<LavaNode>();
+            if (!lavaNode.IsConnected)
+            {
+                return lavaNode.ConnectAsync();
+            }
+            else
+            {
+                return Task.CompletedTask;
+            }
         }
 
         private Task OnLogReceived(LogMessage log)
@@ -63,21 +78,27 @@ namespace Rosalind.Core.Services
 
         public ServiceProvider ConfigureServices()
         {
-            return new ServiceCollection()
+            var services = new ServiceCollection()
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<DiscordSocketClient>(x => ActivatorUtilities.CreateInstance<DiscordSocketClient>(x, new DiscordSocketConfig { LogLevel = LogSeverity.Debug }))
                 .AddSingleton<ComponentService>()
                 .AddSingleton<CommandService>(x => ActivatorUtilities.CreateInstance<CommandService>(x, new CommandServiceConfig { DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Debug }))
                 .AddSingleton<SqlService>()
                 .AddSingleton<LavaConfig>()
-                .AddSingleton<LavaNode>()
-                .AddSingleton<Setting>()
-                .AddLavaNode(x => {
-                    x.SelfDeaf = true;
-                    x.Hostname = "127.0.0.1";
-                    x.Port = 8080;
-                })
-                .BuildServiceProvider();
+                .AddSingleton<Setting>();
+
+            foreach (var item in _setting.LavalinkConfig.Nodes)
+            {
+                services.AddLavaNode(x =>
+                {
+                    x.SelfDeaf = _setting.LavalinkConfig.SelfDeaf;
+                    x.Hostname = item.Hostname;
+                    x.Port = item.Port;
+                    x.Authorization = item.Password;
+                });
+            }
+
+            return services.BuildServiceProvider(); ;
         }
     }
 }

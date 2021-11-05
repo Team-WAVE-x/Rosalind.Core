@@ -8,6 +8,9 @@ namespace Rosalind.Core.Models
         [JsonProperty("config")]
         public Config Config { get; set; }
 
+        [JsonProperty("lavalinkConfig")]
+        public LavalinkConfig LavalinkConfig { get; set; }
+
         [JsonProperty("commandGroup")]
         public CommandGroup[] CommandGroup { get; set; }
 
@@ -19,33 +22,6 @@ namespace Rosalind.Core.Models
             this.Config = json.Config;
             this.CommandGroup = json.CommandGroup;
         }
-    }
-
-    public partial class Config
-    {
-        [JsonProperty("token")]
-        public string Token { get; set; }
-
-        [JsonProperty("trnToken")]
-        public string TrnToken { get; set; }
-
-        [JsonProperty("koreanbotsToken")]
-        public string KoreanbotsToken { get; set; }
-
-        [JsonProperty("connectionString")]
-        public string ConnectionString { get; set; }
-
-        [JsonProperty("developerId")]
-        public ulong DeveloperId { get; set; }
-
-        [JsonProperty("koreanbotsId")]
-        public string KoreanbotsId { get; set; }
-
-        [JsonProperty("errorLogChannelId")]
-        public ulong ErrorLogChannelId { get; set; }
-
-        [JsonProperty("prefix")]
-        public string Prefix { get; set; }
     }
 
     public class CommandGroup
@@ -63,7 +39,7 @@ namespace Rosalind.Core.Models
         public Command[] Commands { get; set; }
     }
 
-    public partial class Command
+    public class Command
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -73,5 +49,53 @@ namespace Rosalind.Core.Models
 
         [JsonProperty("args")]
         public string[] Args { get; set; }
+    }
+
+    public class Config
+    {
+        [JsonProperty("token")]
+        public string Token { get; set; }
+
+        [JsonProperty("trnToken")]
+        public string TrnToken { get; set; }
+
+        [JsonProperty("koreanbotsToken")]
+        public string KoreanbotsToken { get; set; }
+
+        [JsonProperty("connectionString")]
+        public string ConnectionString { get; set; }
+
+        [JsonProperty("developerId")]
+        public ulong DeveloperId { get; set; }
+
+        [JsonProperty("koreanbotsId")]
+        public ulong KoreanbotsId { get; set; }
+
+        [JsonProperty("errorLogChannelId")]
+        public ulong ErrorLogChannelId { get; set; }
+
+        [JsonProperty("prefix")]
+        public string Prefix { get; set; }
+    }
+
+    public class LavalinkConfig
+    {
+        [JsonProperty("selfDeaf")]
+        public bool SelfDeaf { get; set; }
+
+        [JsonProperty("nodes")]
+        public Node[] Nodes { get; set; }
+    }
+
+    public class Node
+    {
+        [JsonProperty("hostname")]
+        public string Hostname { get; set; }
+
+        [JsonProperty("port")]
+        public ushort Port { get; set; }
+
+        [JsonProperty("password")]
+        public string Password { get; set; }
     }
 }
