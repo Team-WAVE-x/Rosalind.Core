@@ -74,6 +74,8 @@ namespace Rosalind.Core.Services
                 .AddSingleton<Setting>()
                 .AddLavaNode(x => {
                     x.SelfDeaf = true;
+                    x.Hostname = "127.0.0.1";
+                    x.Port = 8080;
                 })
                 .BuildServiceProvider();
         }
