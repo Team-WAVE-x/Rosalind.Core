@@ -13,15 +13,6 @@ namespace Rosalind.Core.Models
 
         [JsonProperty("commandGroup")]
         public CommandGroup[] CommandGroup { get; set; }
-
-        public void GetConfig(string filePath)
-        {
-            string jsonString = File.ReadAllText(filePath);
-            var json = JsonConvert.DeserializeObject<Setting>(jsonString);
-
-            this.Config = json.Config;
-            this.CommandGroup = json.CommandGroup;
-        }
     }
 
     public class CommandGroup

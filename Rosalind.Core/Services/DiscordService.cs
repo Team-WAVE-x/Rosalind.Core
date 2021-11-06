@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
 using Rosalind.Core.Models;
+using Rosalind.Core.Modules;
 using System;
 using System.IO;
 using System.Threading;
@@ -19,21 +20,16 @@ namespace Rosalind.Core.Services
         private ServiceProvider _service;
         private DiscordSocketClient _client;
 
-        private readonly string configFilePath;
-
         public DiscordService(string configFilePath)
         {
-            this.configFilePath = configFilePath;
-
             _log = LogManager.GetLogger("RollingActivityLog");
+            _setting = SettingManager.GetSetting(configFilePath);
             _service = ConfigureServices();
-            _setting = _service.GetRequiredService<Setting>();
             _client = _service.GetRequiredService<DiscordSocketClient>();
         }
 
         public async Task MainAsync()
         {
-            _setting.GetConfig(Path.GetFullPath(configFilePath));
             _client.Log += OnLogReceived;
             _client.Ready += OnReadyAsync;
             _service.GetRequiredService<CommandService>().Log += OnLogReceived;
@@ -48,6 +44,7 @@ namespace Rosalind.Core.Services
         private Task OnReadyAsync()
         {
             var lavaNode = _service.GetRequiredService<LavaNode>();
+
             if (!lavaNode.IsConnected)
             {
                 return lavaNode.ConnectAsync();
@@ -82,7 +79,7 @@ namespace Rosalind.Core.Services
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<DiscordSocketClient>(x => ActivatorUtilities.CreateInstance<DiscordSocketClient>(x, new DiscordSocketConfig { LogLevel = LogSeverity.Debug }))
                 .AddSingleton<ComponentService>()
-                .AddSingleton<CommandService>(x => ActivatorUtilities.CreateInstance<CommandService>(x, new CommandServiceConfig { DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Debug }))
+                .AddSingleton<CommandService>(x => new CommandService(new CommandServiceConfig { DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Debug }))
                 .AddSingleton<SqlService>()
                 .AddSingleton<LavaConfig>()
                 .AddSingleton<Setting>();
@@ -96,9 +93,11 @@ namespace Rosalind.Core.Services
                     x.Port = item.Port;
                     x.Authorization = item.Password;
                 });
+
+                _log.Info($"Added Lavanode ({item.Hostname}:{item.Port})");
             }
 
-            return services.BuildServiceProvider(); ;
+            return services.BuildServiceProvider();
         }
     }
 }
