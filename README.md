@@ -23,6 +23,7 @@ Rosalind는 C#으로 작성된 순수 객체지향 디스코드 봇입니다.
 * SqlKata.Execution
 * System.Data.SqlClient
 * System.Runtime.Caching
+* Victoria
 
 ## 콘솔 명령줄
 * -h : 도움말을 표시합니다.
@@ -44,7 +45,6 @@ CREATE DATABASE IF NOT EXISTS `STONKS_DB`;
 | COIN   | 현재 유저가 가지고 있는 코인입니다.                |
 
 ## 할 일
-* [ ] Lavalink.Net 적용하기
 * [ ] [SlashCommand 애트리뷰트](https://github.com/Discord-Net-Labs/Discord.Net-Labs/pull/52)가 완성되면 적용하기
 
 ## 개발자
