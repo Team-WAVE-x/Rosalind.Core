@@ -5,8 +5,6 @@ using log4net;
 using Microsoft.Extensions.DependencyInjection;
 using Rosalind.Core.Models;
 using Rosalind.Core.Modules;
-using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Victoria;

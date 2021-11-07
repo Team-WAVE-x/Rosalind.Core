@@ -5,11 +5,11 @@ using Victoria;
 
 namespace Rosalind.Core.Commands.Audio
 {
-    public class Play : ModuleBase<SocketCommandContext>
+    public class Join : ModuleBase<SocketCommandContext>
     {
         private readonly LavaNode _lavaNode;
 
-        public Play(LavaNode lavaNode)
+        public Join(LavaNode lavaNode)
         {
             _lavaNode = lavaNode;
         }
@@ -22,7 +22,7 @@ namespace Rosalind.Core.Commands.Audio
                 await ReplyAsync("❌ 이미 음성 채널에 연결되어 있습니다!");
                 return;
             }
-            
+
             var voiceState = Context.User as IVoiceState;
             if (voiceState?.VoiceChannel == null)
             {
