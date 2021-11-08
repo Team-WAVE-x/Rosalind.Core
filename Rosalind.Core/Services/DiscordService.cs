@@ -3,8 +3,9 @@ using Discord.Commands;
 using Discord.WebSocket;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Rosalind.Core.Models;
-using Rosalind.Core.Modules;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Victoria;
@@ -16,18 +17,26 @@ namespace Rosalind.Core.Services
         private ILog _log;
         private Setting _setting;
         private ServiceProvider _service;
+        private LavalinkSetting _lavalink;
         private DiscordSocketClient _client;
 
-        public DiscordService(string configFilePath)
+        public DiscordService(string lavalinkConfigFilePath)
         {
             _log = LogManager.GetLogger("RollingActivityLog");
-            _setting = SettingManager.GetSetting(configFilePath);
+
+            string jsonString = File.ReadAllText(Path.GetFullPath(lavalinkConfigFilePath));
+            _lavalink = JsonConvert.DeserializeObject<LavalinkSetting>(jsonString);
+
             _service = ConfigureServices();
+            _setting = _service.GetRequiredService<Setting>();
             _client = _service.GetRequiredService<DiscordSocketClient>();
         }
 
-        public async Task MainAsync()
+        public async Task MainAsync(string configFilePath)
         {
+            string jsonString = File.ReadAllText(Path.GetFullPath(configFilePath));
+            _setting = JsonConvert.DeserializeObject<Setting>(jsonString);
+
             _client.Log += OnLogReceived;
             _client.Ready += OnReadyAsync;
             _service.GetRequiredService<CommandService>().Log += OnLogReceived;
@@ -56,17 +65,17 @@ namespace Rosalind.Core.Services
         private Task OnLogReceived(LogMessage log)
         {
             if (log.Severity == LogSeverity.Critical)
-                _log.Fatal(log.Message ?? "Null");
+                _log.Fatal(log.Message);
             else if (log.Severity == LogSeverity.Error)
-                _log.Error(log.Message ?? "Null");
+                _log.Error(log.Message);
             else if (log.Severity == LogSeverity.Warning)
-                _log.Warn(log.Message ?? "Null");
+                _log.Warn(log.Message);
             else if (log.Severity == LogSeverity.Info)
-                _log.Info(log.Message ?? "Null");
+                _log.Info(log.Message);
             else if (log.Severity == LogSeverity.Verbose)
-                _log.Info(log.Message ?? "Null");
+                _log.Info(log.Message);
             else if (log.Severity == LogSeverity.Debug)
-                _log.Debug(log.Message ?? "Null");
+                _log.Debug(log.Message);
 
             return Task.CompletedTask;
         }
@@ -75,18 +84,18 @@ namespace Rosalind.Core.Services
         {
             var services = new ServiceCollection()
                 .AddSingleton<CommandHandlingService>()
-                .AddSingleton<DiscordSocketClient>(x => ActivatorUtilities.CreateInstance<DiscordSocketClient>(x, new DiscordSocketConfig { LogLevel = LogSeverity.Debug }))
+                .AddSingleton<DiscordSocketClient>(x => new DiscordSocketClient(new DiscordSocketConfig { LogLevel = LogSeverity.Debug }))
                 .AddSingleton<ComponentService>()
                 .AddSingleton<CommandService>(x => new CommandService(new CommandServiceConfig { DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Debug }))
                 .AddSingleton<SqlService>()
                 .AddSingleton<LavaConfig>()
                 .AddSingleton<Setting>();
 
-            foreach (var item in _setting.LavalinkConfig.Nodes)
+            foreach (var item in _lavalink.Nodes)
             {
                 services.AddLavaNode(x =>
                 {
-                    x.SelfDeaf = _setting.LavalinkConfig.SelfDeaf;
+                    x.SelfDeaf = _lavalink.SelfDeaf;
                     x.Hostname = item.Hostname;
                     x.Port = item.Port;
                     x.Authorization = item.Password;

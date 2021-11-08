@@ -13,7 +13,11 @@ namespace Rosalind.Core
                     .WithDescription("Path of Config File")
                     .WithExamples("./Setting.json")
                     .IsOptionalWithDefault($"./Setting.json")
-                .Call(config => new DiscordService(config).MainAsync().GetAwaiter().GetResult())
+                .Parameter("-l", "--lavalink")
+                    .WithDescription("Path of Lavalink Config File")
+                    .WithExamples("./Lavalink.json")
+                    .IsOptionalWithDefault($"./Lavalink.json")
+                .Call(lavalink => config => new DiscordService(lavalink).MainAsync(config).GetAwaiter().GetResult())
                 .Parse(args);
         }
     }

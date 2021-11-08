@@ -1,23 +1,10 @@
 ﻿{
   "config": {
     "token": "TOKEN_HERE",
-    "trnToken": "TRN_TOKEN_HERE",
-    "koreanbotsToken": "KOREANBOTS_TOKEN_HERE",
     "connectionString": "DATABASE_CONNECTION_STRING_HERE",
     "developerId": "DEVELOPER_ID_HERE",
-    "koreanbotsId": "KOREANBOTS_ID_HERE",
     "errorLogChannelId": "ERROR_LOG_CHANNEL_ID_HERE",
     "prefix": "PREFIX_HERE"
-  },
-  "lavalinkConfig": {
-    "selfDeaf": true,
-    "nodes": [
-      {
-        "hostname": "LAVALINK_HOSTNAME_HERE",
-        "port": "LAVALINK_PORT_HERE",
-        "password": "LAVALINK_PASSWORD_HERE"
-      }
-    ]
   },
   "commandGroup": [
     {

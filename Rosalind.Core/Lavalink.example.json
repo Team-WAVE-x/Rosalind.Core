@@ -1,0 +1,10 @@
+﻿{
+  "selfDeaf": true,
+  "nodes": [
+    {
+      "hostname": "LAVALINK_HOSTNAME_HERE",
+      "port": "LAVALINK_PORT_HERE",
+      "password": "LAVALINK_PASSWORD_HERE"
+    }
+  ]
+}
