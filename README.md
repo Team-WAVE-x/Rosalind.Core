@@ -7,27 +7,11 @@ Rosalind는 C#으로 작성된 순수 객체지향 디스코드 봇입니다.
 
 ## 요구사항
 ### 시스템
-* .Net Core 3.1이 설치되어 있는 윈도우, 리눅스, 매킨토시 컴퓨터
-### Nuget 패키지
-* BooruSharp
-* Discord.Net.Labs.Commands
-* Discord.Net.Labs.Core
-* Discord.Net.Labs.Rest
-* Discord.Net.Labs.WebSocket
-* FluentArgs
-* log4net
-* Microsoft.CodeAnalysis.CSharp.Scripting
-* Microsoft.Extensions.DependencyInjection
-* MySql.Data
-* SqlKata
-* SqlKata.Execution
-* System.Data.SqlClient
-* System.Runtime.Caching
-* Victoria
+* .NET 6.0이 설치되어 있는 윈도우, 리눅스, 매킨토시 컴퓨터
 
 ## 콘솔 명령줄
-* -h : 도움말을 표시합니다.
-* -c <설정 파일 경로> : 프로그램이 사용할 설정 파일의 경로를 나타냅니다.
+* --config <설정 파일 경로> : 프로그램이 사용할 설정 파일의 경로를 나타냅니다.
+* --lavalink <라바링크 설정 파일 경로> : 프로그램이 사용할 라바링크 설정 파일의 경로를 나타냅니다.
 
 ## 데이터베이스
 ```sql
