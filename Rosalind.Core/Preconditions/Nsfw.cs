@@ -3,30 +3,41 @@ using Discord.Commands;
 using System;
 using System.Threading.Tasks;
 
-namespace Rosalind.Core.Preconditions
+namespace Rosalind.Core.Preconditions;
+
+/// <summary>
+/// 명령어를 NSFW 채널에서만 사용할 수 있도록 합니다.
+/// </summary>
+public class Nsfw : PreconditionAttribute
 {
-    public class Nsfw : PreconditionAttribute
+    private readonly string _errorMessage;
+
+    /// <summary>
+    /// 명령어를 NSFW 채널에서만 사용할 수 있도록 만듭니다.
+    /// </summary>
+    /// <param name="errorMessage">NSFW 채널이 아닌 곳에서 명령어를 실행했을 때 표시할 메시지입니다.</param>
+    public Nsfw(string errorMessage = "❌ 본 명령어는 NSFW 채널에서만 사용할 수 있습니다.")
     {
-        private readonly string _errorMessage;
+        _errorMessage = errorMessage;
+    }
 
-        public Nsfw(string errorMessage = "❌ 본 명령어는 NSFW 채널에서만 사용할 수 있습니다.")
+    /// <summary>
+    /// 유저가 명령어를 사용할 수 있는지 확인합니다.
+    /// </summary>
+    /// <param name="context">명령어의 컨텍스트</param>
+    /// <param name="command">명령어 객체</param>
+    /// <param name="services">서비스</param>
+    /// <returns>명령어가 사용 가능 한지 반환합니다.</returns>
+    public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+    {
+        if (context.Channel is ITextChannel {IsNsfw: true})
         {
-            _errorMessage = errorMessage;
+            return Task.FromResult(PreconditionResult.FromSuccess());
         }
-
-        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+        else
         {
-            var channel = context.Channel as ITextChannel;
-
-            if (channel != null && channel.IsNsfw)
-            {
-                return Task.FromResult(PreconditionResult.FromSuccess());
-            }
-            else
-            {
-                context.Channel.SendMessageAsync(_errorMessage);
-                return Task.FromResult(PreconditionResult.FromError(_errorMessage));
-            }
+            context.Channel.SendMessageAsync(_errorMessage);
+            return Task.FromResult(PreconditionResult.FromError(_errorMessage));
         }
     }
 }

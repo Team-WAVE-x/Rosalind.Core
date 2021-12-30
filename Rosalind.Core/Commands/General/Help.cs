@@ -67,7 +67,7 @@ namespace Rosalind.Core.Commands.General
 
             Action<SocketInteraction, ComponentMessage> stopAction = delegate (SocketInteraction interaction, ComponentMessage message)
             {
-                _component.RemoveComponentMessage(message.MessageId);
+                ComponentService.RemoveComponentMessage(message.MessageId);
             };
 
             Action<SocketInteraction, ComponentMessage> nextAction = delegate (SocketInteraction interaction, ComponentMessage message)

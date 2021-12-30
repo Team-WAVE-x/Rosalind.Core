@@ -1,24 +1,29 @@
-﻿using FluentArgs;
+﻿using System.CommandLine;
+using System.CommandLine.NamingConventionBinder;
+using System.IO;
 using Rosalind.Core.Services;
 
-namespace Rosalind.Core
+namespace Rosalind.Core;
+
+internal static class Program
 {
-    class Program
+    public static int Main(string[] args)
     {
-        static void Main(string[] args)
+        var rootCommand = new RootCommand
         {
-            FluentArgsBuilder.New()
-                .RegisterHelpFlag("-h", "--help")
-                .Parameter("-c", "--config")
-                    .WithDescription("Path of Config File")
-                    .WithExamples("./Setting.json")
-                    .IsOptionalWithDefault($"./Setting.json")
-                .Parameter("-l", "--lavalink")
-                    .WithDescription("Path of Lavalink Config File")
-                    .WithExamples("./Lavalink.json")
-                    .IsOptionalWithDefault($"./Lavalink.json")
-                .Call(lavalink => config => new DiscordService(lavalink).MainAsync(config).GetAwaiter().GetResult())
-                .Parse(args);
-        }
+            new Option<FileInfo>(
+                "--config",
+                "Path of config file."),
+            new Option<FileInfo>(
+                "--lavalink",
+                "Path of Lavalink config file.")
+        };
+
+        rootCommand.Description = "Rosalind.Core";
+
+        rootCommand.Handler = CommandHandler.Create<FileInfo, FileInfo>((config, lavalink) =>
+            new DiscordService(config, lavalink).MainAsync().GetAwaiter().GetResult());
+
+        return rootCommand.InvokeAsync(args).Result;
     }
 }

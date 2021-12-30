@@ -356,3 +356,4 @@ MigrationBackup/
 Properties/
 Setting.json
 Lavalink.json
+.idea/

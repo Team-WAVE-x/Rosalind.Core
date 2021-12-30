@@ -89,7 +89,7 @@ namespace Rosalind.Core.Commands.Hentai
 
             Action<SocketInteraction, ComponentMessage> closeAction = delegate (SocketInteraction interaction, ComponentMessage message)
             {
-                _component.RemoveComponentMessage(message.MessageId);
+                ComponentService.RemoveComponentMessage(message.MessageId);
             };
             #endregion
 

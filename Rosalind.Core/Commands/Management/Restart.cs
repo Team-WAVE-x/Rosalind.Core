@@ -31,7 +31,7 @@ namespace Rosalind.Core.Commands.Management
 
             Action<SocketInteraction, ComponentMessage> cancelAction = delegate (SocketInteraction interaction, ComponentMessage message)
             {
-                _component.RemoveComponentMessage(message.MessageId);
+                ComponentService.RemoveComponentMessage(message.MessageId);
             };
             #endregion
 

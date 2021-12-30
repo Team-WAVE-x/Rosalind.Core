@@ -31,7 +31,7 @@ Rosalind는 C#으로 작성된 순수 객체지향 디스코드 봇입니다.
 
 ## 데이터베이스
 ```sql
-CREATE DATABASE IF NOT EXISTS `STONKS_DB`;
+CREATE DATABASE IF NOT EXISTS `ROSALIND_DB`;
 ```
 
 테이블은 프로그램이 알아서 생성합니다.
