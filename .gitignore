@@ -399,6 +399,11 @@ FodyWeavers.xsd
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
+.idea/**/discord.xml
+.idea/**/encodings.xml
+.idea/**/indexLayout.xml
+.idea/**/misc.xml
+.idea/**/vcs.xml
 .idea/**/dictionaries
 .idea/**/shelf
 
