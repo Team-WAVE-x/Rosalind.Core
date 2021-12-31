@@ -25,13 +25,6 @@ public class Cooldown : PreconditionAttribute
         _errorMessage = errorMessage;
     }
     
-    /// <summary>
-    /// 유저가 명령어를 사용할 수 있는지 확인합니다.
-    /// </summary>
-    /// <param name="context">명령어의 컨텍스트</param>
-    /// <param name="command">명령어 객체</param>
-    /// <param name="services">서비스</param>
-    /// <returns>명령어가 사용 가능 한지 반환합니다.</returns>
     public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
     {
         var stackCooldownTimer = new List<DateTimeOffset>();

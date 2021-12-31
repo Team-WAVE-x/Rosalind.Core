@@ -21,7 +21,7 @@ public class LavalinkSetting
 }
 
 /// <summary>
-/// 라바링크의 노드를 의미합니다.
+/// 라바링크 노드 객체입니다.
 /// </summary>
 public class Node
 {

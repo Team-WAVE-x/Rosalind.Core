@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Rosalind.Core.Services;
 
+/// <summary>
+/// 명령어를 관리하고 실행하는 서비스입니다.
+/// </summary>
 public class CommandHandlingService
 {
     private readonly ILog _log;
@@ -18,6 +21,10 @@ public class CommandHandlingService
     private readonly IServiceProvider _service;
     private readonly DiscordSocketClient _client;
 
+    /// <summary>
+    /// 서비스 목록을 받아 명령어를 등록합니다.
+    /// </summary>
+    /// <param name="service">서비스</param>
     public CommandHandlingService(IServiceProvider service)
     {
         _service = service;

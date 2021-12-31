@@ -37,5 +37,7 @@
     <None Update="Setting.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Remove="Lavalink.example.json" />
+    <None Remove="Setting.example.json" />
   </ItemGroup>
 </Project>

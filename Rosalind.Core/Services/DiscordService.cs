@@ -42,10 +42,7 @@ public class DiscordService
         _setting = _service.GetRequiredService<Setting>();
         _client = _service.GetRequiredService<DiscordSocketClient>();
     }
-
-    /// <summary>
-    /// 클라이언트가 구성되면 시작되는 메서드입니다.
-    /// </summary>
+    
     public async Task MainAsync()
     {
         _client.Log += OnLogReceived;

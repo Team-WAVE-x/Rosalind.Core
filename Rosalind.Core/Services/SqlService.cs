@@ -115,7 +115,7 @@ public class SqlService
     /// </summary>
     /// <param name="guildId">길드 아이디</param>
     /// <param name="userId">유저 아이디</param>
-    /// <param name="coin">추가할 코인의 양</param>
+    /// <param name="coin">추가할 코인의 수</param>
     public void AddUserCoin(ulong guildId, ulong userId, ulong coin)
     {
         var connection = new MySqlConnection(_setting.Config.ConnectionString);
@@ -141,7 +141,7 @@ public class SqlService
     /// </summary>
     /// <param name="guildId">길드 아이디</param>
     /// <param name="userId">유저 아이디</param>
-    /// <param name="coin">추가할 코인의 량</param>
+    /// <param name="coin">추가할 코인의 수</param>
     public void SubUserCoin(ulong guildId, ulong userId, ulong coin)
     {
         var connection = new MySqlConnection(_setting.Config.ConnectionString);
